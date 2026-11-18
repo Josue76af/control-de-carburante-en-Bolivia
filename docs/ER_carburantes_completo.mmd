@@ -1,0 +1,251 @@
+erDiagram
+    PERSONA {
+        NUMBER id_persona PK
+        VARCHAR2 ci UK
+        VARCHAR2 nombres
+        VARCHAR2 apellidos
+    }
+    VEHICULO {
+        NUMBER id_vehiculo PK
+        NUMBER id_persona FK
+        VARCHAR2 placa UK
+        NUMBER cilindrada_cc
+        NUMBER capacidad_tanque_l
+        NUMBER id_tipo_combustible FK
+    }
+    HABILITACION_VEHICULO {
+        NUMBER id_habilitacion PK
+        NUMBER id_persona FK
+        NUMBER id_vehiculo FK
+        TIMESTAMP desde
+        TIMESTAMP hasta
+    }
+    BIOMETRIA {
+        NUMBER id_biometria PK
+        NUMBER id_persona FK
+        VARCHAR2 plantilla_protegida
+        VARCHAR2 estado
+    }
+    PERFIL_CONSUMO {
+        NUMBER id_perfil PK
+        VARCHAR2 categoria
+        NUMBER cilindrada_min
+        NUMBER consumo_referencia
+    }
+    POLITICA_SUBVENCION {
+        NUMBER id_politica PK
+        NUMBER litros_semanales
+        VARCHAR2 max_vehiculos
+        TIMESTAMP vigencia_desde
+        TIMESTAMP vigencia_hasta
+    }
+    CUPO_SEMANAL {
+        NUMBER id_cupo PK
+        NUMBER id_persona FK
+        NUMBER id_politica FK
+        TIMESTAMP lunes_inicio
+        NUMBER litros_asignados
+        NUMBER litros_consumidos
+    }
+    TIPO_COMBUSTIBLE {
+        NUMBER id_tipo PK
+        VARCHAR2 nombre
+    }
+    PRECIO_COMBUSTIBLE {
+        NUMBER id_precio PK
+        NUMBER id_tipo FK
+        VARCHAR2 tarifa
+        NUMBER precio_litro
+        TIMESTAMP vigencia_desde
+    }
+    ESTACION_SERVICIO {
+        NUMBER id_estacion PK
+        VARCHAR2 codigo UK
+        VARCHAR2 nombre
+        NUMBER latitud
+        NUMBER longitud
+    }
+    SURTIDOR {
+        NUMBER id_surtidor PK
+        NUMBER id_estacion FK
+        VARCHAR2 codigo
+    }
+    MANGUERA {
+        NUMBER id_manguera PK
+        NUMBER id_surtidor FK
+        NUMBER id_tanque FK
+    }
+    TANQUE_ESTACION {
+        NUMBER id_tanque PK
+        NUMBER id_estacion FK
+        NUMBER id_tipo FK
+        NUMBER capacidad_l
+    }
+    SOLICITUD_CARGA {
+        NUMBER id_solicitud PK
+        NUMBER id_persona FK
+        NUMBER id_vehiculo FK
+        NUMBER id_estacion FK
+        NUMBER id_manguera FK
+        NUMBER id_operador FK
+        TIMESTAMP fecha_hora
+        VARCHAR2 estado
+    }
+    VALIDACION_CARGA {
+        NUMBER id_validacion PK
+        NUMBER id_solicitud FK
+        VARCHAR2 regla
+        VARCHAR2 resultado
+    }
+    CARGA_COMBUSTIBLE {
+        NUMBER id_carga PK
+        NUMBER id_solicitud FK
+        NUMBER litros_reales
+        TIMESTAMP fecha_fin
+    }
+    DETALLE_CARGA {
+        NUMBER id_detalle PK
+        NUMBER id_carga FK
+        NUMBER id_precio FK
+        NUMBER id_cupo FK
+        NUMBER litros
+        VARCHAR2 subtotal
+    }
+    LOTE_COMBUSTIBLE {
+        NUMBER id_lote PK
+        NUMBER id_tipo FK
+        VARCHAR2 codigo_lote
+    }
+    RECEPCION_COMBUSTIBLE {
+        NUMBER id_recepcion PK
+        NUMBER id_lote FK
+        NUMBER id_tanque FK
+        NUMBER litros
+        TIMESTAMP fecha_hora
+    }
+    MOVIMIENTO_INVENTARIO {
+        NUMBER id_movimiento PK
+        NUMBER id_tanque FK
+        NUMBER id_recepcion FK
+        NUMBER id_carga FK
+        VARCHAR2 tipo
+        NUMBER litros
+    }
+    MEDICION_INVENTARIO {
+        NUMBER id_medicion PK
+        NUMBER id_tanque FK
+        TIMESTAMP fecha_hora
+        NUMBER saldo_fisico
+    }
+    ALERTA {
+        NUMBER id_alerta PK
+        NUMBER id_solicitud FK
+        NUMBER id_persona FK
+        NUMBER id_vehiculo FK
+        NUMBER id_estacion FK
+        VARCHAR2 tipo
+        VARCHAR2 estado
+    }
+    HISTORIAL_ALERTA {
+        NUMBER id_historial PK
+        NUMBER id_alerta FK
+        NUMBER id_usuario FK
+        VARCHAR2 estado_nuevo
+        TIMESTAMP fecha_hora
+    }
+    BLOQUEO {
+        NUMBER id_bloqueo PK
+        NUMBER id_persona FK
+        NUMBER id_vehiculo FK
+        NUMBER id_alerta FK
+        TIMESTAMP inicio
+        TIMESTAMP fin
+    }
+    RECLAMO {
+        NUMBER id_reclamo PK
+        NUMBER id_persona FK
+        NUMBER id_estacion FK
+        NUMBER id_carga FK
+        NUMBER id_lote FK
+        VARCHAR2 tipo
+        VARCHAR2 estado
+    }
+    USUARIO_SISTEMA {
+        NUMBER id_usuario PK
+        VARCHAR2 usuario UK
+        VARCHAR2 hash_credencial
+        VARCHAR2 estado
+    }
+    ROL {
+        NUMBER id_rol PK
+        VARCHAR2 nombre UK
+    }
+    USUARIO_ROL {
+        NUMBER id_usuario PK
+        NUMBER id_rol PK
+    }
+    ASIGNACION_ESTACION {
+        NUMBER id_asignacion PK
+        NUMBER id_usuario FK
+        NUMBER id_estacion FK
+        TIMESTAMP desde
+        TIMESTAMP hasta
+    }
+    AUDITORIA_FUNCIONAL {
+        NUMBER id_auditoria PK
+        NUMBER id_usuario FK
+        VARCHAR2 accion
+        VARCHAR2 objeto
+        VARCHAR2 valor_antes
+        VARCHAR2 valor_despues
+        TIMESTAMP fecha_hora
+    }
+    PERSONA ||--o{ VEHICULO : "propiedad actual"
+    PERSONA ||--o{ BIOMETRIA : "credenciales"
+    PERSONA ||--o{ HABILITACION_VEHICULO : "habilita"
+    VEHICULO ||--o{ HABILITACION_VEHICULO : "historial de habilitación"
+    PERFIL_CONSUMO o|--o{ VEHICULO : "perfil estimado"
+    PERSONA ||--o{ CUPO_SEMANAL : "cupo por semana"
+    POLITICA_SUBVENCION ||--o{ CUPO_SEMANAL : "política aplicada"
+    TIPO_COMBUSTIBLE ||--o{ VEHICULO : "combustible admitido"
+    TIPO_COMBUSTIBLE ||--o{ PRECIO_COMBUSTIBLE : "tarifas vigentes/históricas"
+    ESTACION_SERVICIO ||--o{ SURTIDOR : "instala"
+    ESTACION_SERVICIO ||--o{ TANQUE_ESTACION : "almacena"
+    SURTIDOR ||--o{ MANGUERA : "dispone de"
+    TANQUE_ESTACION ||--o{ MANGUERA : "abastece"
+    TIPO_COMBUSTIBLE ||--o{ TANQUE_ESTACION : "contiene"
+    PERSONA ||--o{ SOLICITUD_CARGA : "solicita"
+    VEHICULO ||--o{ SOLICITUD_CARGA : "vehículo solicitado"
+    ESTACION_SERVICIO ||--o{ SOLICITUD_CARGA : "recibe solicitud"
+    MANGUERA ||--o{ SOLICITUD_CARGA : "uso de manguera"
+    USUARIO_SISTEMA ||--o{ SOLICITUD_CARGA : "operador registra"
+    SOLICITUD_CARGA ||--o{ VALIDACION_CARGA : "comprobaciones"
+    SOLICITUD_CARGA ||--o| CARGA_COMBUSTIBLE : "puede producir"
+    CARGA_COMBUSTIBLE ||--|{ DETALLE_CARGA : "desglose por tarifa"
+    PRECIO_COMBUSTIBLE ||--o{ DETALLE_CARGA : "tarifa aplicada"
+    CUPO_SEMANAL o|--o{ DETALLE_CARGA : "solo si subvencionado"
+    LOTE_COMBUSTIBLE ||--o{ RECEPCION_COMBUSTIBLE : "lote recibido"
+    TIPO_COMBUSTIBLE ||--o{ LOTE_COMBUSTIBLE : "corresponde a"
+    TANQUE_ESTACION ||--o{ RECEPCION_COMBUSTIBLE : "recibe"
+    TANQUE_ESTACION ||--o{ MOVIMIENTO_INVENTARIO : "movimientos"
+    TANQUE_ESTACION ||--o{ MEDICION_INVENTARIO : "mediciones"
+    RECEPCION_COMBUSTIBLE o|--o{ MOVIMIENTO_INVENTARIO : "origen recepción"
+    CARGA_COMBUSTIBLE o|--o{ MOVIMIENTO_INVENTARIO : "origen despacho"
+    SOLICITUD_CARGA o|--o{ ALERTA : "alerta por solicitud"
+    PERSONA o|--o{ ALERTA : "afecta persona"
+    VEHICULO o|--o{ ALERTA : "afecta vehículo"
+    ESTACION_SERVICIO o|--o{ ALERTA : "afecta estación"
+    ALERTA ||--o{ HISTORIAL_ALERTA : "gestiones"
+    ALERTA o|--o{ BLOQUEO : "bloqueo vinculado"
+    PERSONA o|--o{ BLOQUEO : "bloqueo persona"
+    VEHICULO o|--o{ BLOQUEO : "bloqueo vehículo"
+    PERSONA ||--o{ RECLAMO : "presenta"
+    CARGA_COMBUSTIBLE o|--o{ RECLAMO : "carga reclamada"
+    ESTACION_SERVICIO ||--o{ RECLAMO : "atiende"
+    LOTE_COMBUSTIBLE o|--o{ RECLAMO : "lote relacionado"
+    USUARIO_SISTEMA ||--o{ USUARIO_ROL : "roles"
+    ROL ||--o{ USUARIO_ROL : "asignaciones"
+    USUARIO_SISTEMA ||--o{ ASIGNACION_ESTACION : "destinos"
+    ESTACION_SERVICIO ||--o{ ASIGNACION_ESTACION : "personal asignado"
+    USUARIO_SISTEMA o|--o{ HISTORIAL_ALERTA : "atiende o sistema"
+    USUARIO_SISTEMA o|--o{ AUDITORIA_FUNCIONAL : "acciones o sistema"
