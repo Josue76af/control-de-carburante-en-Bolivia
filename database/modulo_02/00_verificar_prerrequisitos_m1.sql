@@ -1,0 +1,16 @@
+SET SERVEROUTPUT ON;
+DECLARE
+ V_EXISTENTES NUMBER;
+BEGIN
+ SELECT COUNT(*) INTO V_EXISTENTES FROM USER_TABLES
+ WHERE TABLE_NAME IN (
+  'PERSONA','TIPO_COMBUSTIBLE','POLITICA_SUBVENCION','VEHICULO',
+  'BIOMETRIA','CUPO_SEMANAL','HABILITACION_VEHICULO');
+ IF V_EXISTENTES <> 7 THEN
+    RAISE_APPLICATION_ERROR(-20650,
+      'Faltan tablas del modulo 01: esperadas 7, presentes '||V_EXISTENTES||
+      '. Instale primero las tablas desde database/modulo_01/Tablas-BD/');
+ END IF;
+ DBMS_OUTPUT.PUT_LINE('Prerequisitos OK: 7 tablas del modulo 01 detectadas.');
+END;
+/
