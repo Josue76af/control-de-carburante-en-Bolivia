@@ -1,6 +1,4 @@
--- Ejecutar con F5 desde SQL Developer / SQLcl / SQL*Plus:
--- @database/modulo_01/00_instalar_modulo.sql
--- Se requiere esquema NUEVO. No ejecutar dos veces.
+
 SET DEFINE OFF;
 WHENEVER SQLERROR EXIT FAILURE ROLLBACK;
 
