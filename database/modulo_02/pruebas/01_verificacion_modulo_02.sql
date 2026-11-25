@@ -1,4 +1,4 @@
--- Ejecutar con F5, tras instalacion y poblacion demo.
+
 SET SERVEROUTPUT ON;
 PROMPT === A. Verificar que existan las 12 tablas M2 ===
 SELECT TABLE_NAME FROM USER_TABLES
