@@ -1,5 +1,4 @@
--- Pruebas de validacion del procedimiento: no debe crear registros.
--- Ejecutar con F5 DESPUES de cargar datos demo. Las excepciones esperadas se capturan.
+
 SET SERVEROUTPUT ON;
 DECLARE
   V_TG NUMBER;
