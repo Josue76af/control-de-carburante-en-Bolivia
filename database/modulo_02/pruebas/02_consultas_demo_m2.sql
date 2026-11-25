@@ -1,5 +1,4 @@
--- Ejecutar con F5 tras 01_cargar_datos_demo_m2.sql.
--- Consultas que relacionan las tablas de Modulo 01 y Modulo 02.
+
 SET DEFINE OFF;
 SET SERVEROUTPUT ON;
 
