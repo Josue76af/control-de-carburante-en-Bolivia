@@ -1,5 +1,4 @@
--- Ejecutar solo después de 00_instalar_modulo.sql.
--- No ejecutar más de una vez: datos de muestra no son idempotentes.
+
 SET DEFINE OFF;
 WHENEVER SQLERROR EXIT FAILURE ROLLBACK;
 @@datos_demo/01_datos_integrante_1.sql
